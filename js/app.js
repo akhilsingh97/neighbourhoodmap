@@ -22,23 +22,59 @@ var Location = function(title, long, lat) {
 
 
     // Opens the info window for the location marker.
-    this.populateInfoWindow = function() {
-        for (var i = 0; i < locationsModel.locations.length; i++) {
-            locationsModel.locations[i].infowindow.close();
-        }
-        map.panTo(self.marker.getPosition())
+    // this.populateInfoWindow = function() {
+    //     for (var i = 0; i < locationsModel.locations.length; i++) {
+    //         locationsModel.locations[i].infowindow.close();
+    //     }
+    //     map.panTo(self.marker.getPosition())
+    //
+    //     self.infowindow.setContent(self.content);
+    //     self.infowindow.open(map, self.marker);
+    //     self.marker.setAnimation(google.maps.Animation.BOUNCE);
+    //     setTimeout(function() {
+    //         self.marker.setAnimation(null);
+    //     }, 2200);
+    //
+    // };
 
-        self.infowindow.setContent(self.content);
-        self.infowindow.open(map, self.marker);
-        self.marker.setAnimation(google.maps.Animation.BOUNCE);
-        setTimeout(function() {
-            self.marker.setAnimation(null);
-        }, 2200);
+    this.wikiWindow=function(){
+              // value entered by the user
+              var link = "http://en.wikipedia.org/w/api.php?action=opensearch&search="+ self.title + "&format=json&callback=?"; // url to look for using the search input by the user
+              $.ajax({
+                  type:"GET",
+                  url:link,
+                  async:true,
+                  dataType: "json",
+                  success:function(data){
+                    var articleList= data[0];
+                      var url = "http://en.wikipedia.org/wiki/"+ articleList;
+                      name = ('<a href="' + url + '">' + articleList + '</a>');
+                      console.log(name);
 
-    };
+                      self.infowindow.setContent(name);
+
+                  },
+
+                   error: function(errorMessage){alert("Error");}
+              });
+
+              for (var i = 0; i < locationsModel.locations.length; i++) {
+                  locationsModel.locations[i].infowindow.close();
+              }
+              map.panTo(self.marker.getPosition())
 
 
-    this.addListener = google.maps.event.addListener(self.marker, 'click', (this.populateInfoWindow));
+              self.infowindow.open(map, self.marker);
+              self.marker.setAnimation(google.maps.Animation.BOUNCE);
+              setTimeout(function() {
+                  self.marker.setAnimation(null);
+              }, 2200);
+            };
+
+
+
+    // this.addListener = google.maps.event.addListener(self.marker, 'click', (this.populateInfoWindow));
+    this.addListener = google.maps.event.addListener(self.marker, 'click', (this.wikiWindow));
 
 
 
@@ -48,12 +84,12 @@ var Location = function(title, long, lat) {
 var locationsModel = {
 
     locations: [
-        new Location('Park Ave Penthouse', 40.7713024, -73.9632393),
-        new Location('Chelsea Loft', 40.7444883, -73.9949465),
-        new Location('Union Square Open Floor Plan', 40.7347062, -73.9895759),
-        new Location('East Village Hip Studio', 40.7281777, -73.984377),
-        new Location('TriBeCa Artsy Bachelor Pad', 40.7195264, -74.0089934),
-        new Location('Chinatown Homey Space', 40.7180628, -73.9961237)
+        new Location('Google', 37.3861, 122.0839),
+        new Location('Facebook', 37.4163, -122.153),
+        new Location('Yahoo', 37.3688, 122.0363),
+        new Location('Microsoft', 47.6740, 122.1215),
+        new Location('Redhat', 35.7796, 78.6382),
+        new Location('Columbia University', 40.8075, 73.9626)
     ],
     query: ko.observable(''),
 };
