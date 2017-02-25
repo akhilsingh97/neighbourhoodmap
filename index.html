@@ -7,19 +7,14 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="css/styles.css">
 
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCb8ogJ3sqUPT1WaW-QbhKlnKH2iyEbRcs&v=3"></script>
-
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-
 </head>
 
 <body>
     <div class="search-area" id="search-area">
-        <input class="search-input" placeholder="Search for Places..." type="text" data-bind="value: query, valueUpdate: 'keyup'">
-        <ul class="location-list" data-bind="visible:query, template: {name: 'location', foreach: search}">
+        <input class="search-input" placeholder="Search for Places..." type="text" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+        <ul class="location-list" data-bind="visible:true, template: {name: 'location', foreach: search}">
         </ul>
+
     </div>
 
     <div class="map-canvas" id="map"></div>
@@ -29,26 +24,26 @@
         <!-- <li class="location-item" data-bind="text: title, click: populateInfoWindow"></li> -->
         <li class="location-item" data-bind="text: title, click: wikiWindow"></li>
     </script>
-
     <script>
-        var map;
 
-        function initialize() {
-            var mapOptions = {
-                zoom: 2,
-                center: new google.maps.LatLng(40.8075, 73.9626),
-                disableDefaultUI: true
-            };
-            map = new google.maps.Map(document.getElementById('map'),
-                mapOptions);
-        }
-        initialize();
 
+        function googleError() {
+    // and this will be called when there was an error
+              alert('Failed to connect Google Maps API');
+  }
 
     </script>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
     <script src="js/knockout-3.2.0.js"></script>
-    <script src="js/app.js"></script>
-    
+    <script  type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCb8ogJ3sqUPT1WaW-QbhKlnKH2iyEbRcs&v=3&callback=initialize" onerror="googleError()" async></script>
+
+
 </body>
 
 </html>

@@ -1,9 +1,26 @@
+
+
+
+
+function initialize() {
+  var map;
+  
+  var mapOptions = {
+      zoom: 3,
+      center: new google.maps.LatLng(40.8075, 73.9626),
+      disableDefaultUI: true
+  };
+    map = new google.maps.Map(document.getElementById('map'),
+        mapOptions);
+
+
+
+
 var Location = function(title, long, lat) {
     var self = this;
     this.title = title;
     this.long = long;
     this.lat = lat;
-
 
 
     this.getContent = function() {
@@ -44,19 +61,19 @@ var Location = function(title, long, lat) {
                   type:"GET",
                   url:link,
                   async:true,
-                  dataType: "json",
-                  success:function(data){
+                  dataType: "json"
+                  })
+                  .done(function(data){
                     var articleList= data[0];
                       var url = "http://en.wikipedia.org/wiki/"+ articleList;
                       name = ('<a href="' + url + '">' + articleList + '</a>');
-                      console.log(name);
-
                       self.infowindow.setContent(name);
+                    })
 
-                  },
+                   .fail(function(errorMessage){
+                     alert("Error");
+                 });
 
-                   error: function(errorMessage){alert("Error");}
-              });
 
               for (var i = 0; i < locationsModel.locations.length; i++) {
                   locationsModel.locations[i].infowindow.close();
@@ -84,7 +101,7 @@ var Location = function(title, long, lat) {
 var locationsModel = {
 
     locations: [
-        new Location('Google', 37.3861, 122.0839),
+      //  new Location('Google', 37.3861, 122.0839),
         new Location('Facebook', 37.4163, -122.153),
         new Location('Yahoo', 37.3688, 122.0363),
         new Location('Microsoft', 47.6740, 122.1215),
@@ -100,8 +117,21 @@ locationsModel.search = ko.dependentObservable(function() {
     var self = this;
     var search = this.query().toLowerCase();
     return ko.utils.arrayFilter(self.locations, function(location) {
-        return location.title.toLowerCase().indexOf(search) >= 0;
+        var isMatch = location.title.toLowerCase().indexOf(search) >= 0;
+        if (isMatch) {
+            // show marker here
+            location.marker.setVisible(true);
+
+        } else {
+            // hide marker here
+            location.marker.setVisible(false);
+
+        }
+
+        return isMatch;;
     });
 }, locationsModel);
 
 ko.applyBindings(locationsModel);
+
+}
